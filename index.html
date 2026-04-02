@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chargle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🔋 CHARGLE</h1>
+        
+        <div class="battery-container">
+            <div class="battery-fill" id="batteryFill"></div>
+        </div>
+
+        <div class="input-section">
+            <input type="number" id="guessInput" min="0" max="100" placeholder="Enter %">
+            <button id="guessBtn">Guess!</button>
+        </div>
+
+        <p class="attempts-text">Attempts: <span id="attemptCount">0/4</span></p>
+
+        <div id="history" class="history-grid"></div>
+    </div>
+
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="modalText"></h2>
+            <button onclick="location.reload()">Close</button>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>
