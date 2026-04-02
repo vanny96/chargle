@@ -11,14 +11,12 @@ function getTodayString() {
     return new Date().toISOString().split('T')[0];
 }
 
-function getDailyValue() {
-    const dateString = getTodayString();
-    let hash = 0;
-    for (let i = 0; i < dateString.length; i++) {
-        hash = (hash << 5) - hash + dateString.charCodeAt(i);
-        hash |= 0;
-    }
-    return Math.abs(hash) % 101;
+function getTodayString() {
+    const now = new Date();
+    const year = now.getUTCFullYear();
+    const month = now.getUTCMonth() + 1;
+    const day = now.getUTCDate();
+    return `${year}-${month}-${day}`;
 }
 
 function setCookie(name, value) {
