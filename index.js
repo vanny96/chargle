@@ -8,21 +8,24 @@ let state = {
 };
 
 function getTodayString() {
-    return new Date().toISOString().split('T')[0];
+    const now = new Date();
+    return `${now.getUTCFullYear()}-${now.getUTCMonth() + 1}-${now.getUTCDate()}`;
 }
 
-function getTodayString() {
-    const now = new Date();
-    const year = now.getUTCFullYear();
-    const month = now.getUTCMonth() + 1;
-    const day = now.getUTCDate();
-    return `${year}-${month}-${day}`;
+function getDailyValue() {
+    const dateString = getTodayString();
+    let hash = 0;
+    for (let i = 0; i < dateString.length; i++) {
+        hash = (hash << 5) - hash + dateString.charCodeAt(i);
+        hash |= 0;
+    }
+    return Math.abs(hash) % 101;
 }
 
 function setCookie(name, value) {
-    const date = new Date();
-    date.setUTCHours(23, 59, 59, 999);
-    document.cookie = `${name}=${JSON.stringify(value)}; expires=${date.toUTCString()}; path=/`;
+    const nextDay = new Date();
+    nextDay.setUTCHours(24, 0, 0, 0);
+    document.cookie = `${name}=${JSON.stringify(value)}; expires=${nextDay.toUTCString()}; path=/`;
 }
 
 function getCookie(name) {
@@ -30,6 +33,19 @@ function getCookie(name) {
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return JSON.parse(parts.pop().split(';').shift());
     return null;
+}
+
+function updateTimer() {
+    const now = new Date();
+    const nextDay = new Date();
+    nextDay.setUTCHours(24, 0, 0, 0);
+    
+    const diff = nextDay - now;
+    const hours = Math.floor(diff / (1000 * 60 * 60)).toString().padStart(2, '0');
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+    
+    document.getElementById('timer').innerText = `Next Chargle in: ${hours}:${minutes}:${seconds}`;
 }
 
 function init() {
@@ -49,9 +65,10 @@ function init() {
         document.getElementById('modal').classList.add('hidden');
     });
 
-    if (state.gameOver) {
-        disableInput();
-    }
+    if (state.gameOver) disableInput();
+    
+    setInterval(updateTimer, 1000);
+    updateTimer();
 }
 
 function handleGuess() {
