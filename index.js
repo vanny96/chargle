@@ -70,7 +70,7 @@ function init() {
             document.getElementById('guessBtn').click();
         }
     });
-    
+
     document.getElementById('closeModal').addEventListener('click', () => {
         document.getElementById('modal').classList.add('hidden');
     });
@@ -97,10 +97,10 @@ function handleGuess() {
 
     if (guess === targetValue) {
         state.gameOver = true;
-        endGame("You won!");
+        endGame("You won! 🏆");
     } else if (state.attempts.length >= MAX_ATTEMPTS) {
         state.gameOver = true;
-        endGame(`You lost! The value was ${targetValue}%`);
+        endGame(`You lost!\nThe value was ${targetValue}%`);
     }
 
     setCookie(COOKIE_NAME, state);
