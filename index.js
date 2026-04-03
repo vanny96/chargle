@@ -13,13 +13,17 @@ function getTodayString() {
 }
 
 function getDailyValue() {
-    const dateString = getTodayString();
-    let hash = 0;
-    for (let i = 0; i < dateString.length; i++) {
-        hash = (hash << 5) - hash + dateString.charCodeAt(i);
-        hash |= 0;
-    }
-    return Math.abs(hash) % 101;
+    const now = new Date();
+    let year = now.getUTCFullYear()
+    let month = (now.getUTCMonth() + 1)
+    let day = now.getUTCDate()
+    let h = year ^ month ^ day;
+    
+    h = Math.imul(h ^ (h >>> 16), 0x21f0aaad);
+    h = Math.imul(h ^ (h >>> 15), 0x735a2d97);
+    h = h ^ (h >>> 15);
+    
+    return Math.abs(h) % 101;
 }
 
 function setCookie(name, value) {
