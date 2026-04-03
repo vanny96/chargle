@@ -18,11 +18,11 @@ function getDailyValue() {
     let month = (now.getUTCMonth() + 1)
     let day = now.getUTCDate()
     let h = year ^ month ^ day;
-    
+
     h = Math.imul(h ^ (h >>> 16), 0x21f0aaad);
     h = Math.imul(h ^ (h >>> 15), 0x735a2d97);
     h = h ^ (h >>> 15);
-    
+
     return Math.abs(h) % 101;
 }
 
@@ -43,12 +43,12 @@ function updateTimer() {
     const now = new Date();
     const nextDay = new Date();
     nextDay.setUTCHours(24, 0, 0, 0);
-    
+
     const diff = nextDay - now;
     const hours = Math.floor(diff / (1000 * 60 * 60)).toString().padStart(2, '0');
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
     const seconds = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
-    
+
     document.getElementById('timer').innerText = `Next Chargle in: ${hours}:${minutes}:${seconds}`;
 }
 
@@ -63,14 +63,20 @@ function init() {
 
     document.getElementById('batteryFill').style.width = `${targetValue}%`;
     document.getElementById('attemptCount').innerText = `${state.attempts.length}/${MAX_ATTEMPTS}`;
-    
+
     document.getElementById('guessBtn').addEventListener('click', handleGuess);
+    document.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            document.getElementById('guessBtn').click();
+        }
+    });
+    
     document.getElementById('closeModal').addEventListener('click', () => {
         document.getElementById('modal').classList.add('hidden');
     });
 
     if (state.gameOver) disableInput();
-    
+
     setInterval(updateTimer, 1000);
     updateTimer();
 }
@@ -86,7 +92,7 @@ function handleGuess() {
 
     state.attempts.push(guess);
     addHistoryRow(guess, targetValue);
-    
+
     document.getElementById('attemptCount').innerText = `${state.attempts.length}/${MAX_ATTEMPTS}`;
 
     if (guess === targetValue) {
